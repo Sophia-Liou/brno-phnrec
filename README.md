@@ -7,7 +7,7 @@ In 2016 [Márton Makrai](https://github.com/makrai/brno-phnrec) fixed it to comp
 sudo apt-get install libopenblas-dev libopenblas-base
 git clone https://github.com/uiuc-sst/brno-phnrec.git
 cd brno-phnrec/PhnRec
-make -f makefile_phnrec.lin
+make
 ```
 ## How to run
 ```
