@@ -11,8 +11,9 @@ make
 ```
 ## How to run
 ```
+./test.sh
 ./phnrec
 ./phnrec -c PHN_HU_SPDAT_LCRC_N1500 -i /foo/speech.wav
 ```
-The second command creates a transcription `/foo/speech.rec` in SAMPA phones of `/foo/speech.wav`.  (The option `-m` to set the output dir is silently ignored;  it's used only when transcribing a whole list of speech files.)  
+The last command creates a transcription `/foo/speech.rec` in [SAMPA phones](https://en.wikipedia.org/wiki/SAMPA_chart) of `/foo/speech.wav`.  (The option `-m` to set the output dir is silently ignored;  it's used only when transcribing a whole list of speech files.)  
 More options are described on Brno's webpage.
