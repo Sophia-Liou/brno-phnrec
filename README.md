@@ -16,3 +16,5 @@ in [SAMPA phones](https://en.wikipedia.org/wiki/SAMPA_chart) of a speech recordi
 `./phnrec` lists all the options.  For details, see Brno's webpage.
 
 `./test.sh` runs a prebuilt test for phnrec.
+
+`./phnrec ... -o /dev/stdout | cut -f3 -d' '` keeps only the phones.
