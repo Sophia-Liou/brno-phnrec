@@ -1,5 +1,6 @@
 PhnRec/phnrec
 PhnRec/test*.rec
+PhnRec/test*.rec.bak
 
 # Compiled Object files
 *.slo
