@@ -1,6 +1,7 @@
 PhnRec/phnrec
 PhnRec/test*.rec
 PhnRec/test*.rec.bak
+PhnRec/PHN_HU_SPDAT_LCRC_N1500/weights/*.nbin
 
 # Compiled Object files
 *.slo
