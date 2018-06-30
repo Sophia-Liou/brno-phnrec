@@ -1200,13 +1200,13 @@ bool SpeechRec::ProcessFile(data_format inpf, data_format outpf, char *source, c
 
 bool SpeechRec::ProcessFileListLine(data_format inpf, data_format outpf, char *line, FILE *fp_mlf)
 {
-	char file1[1024];
-	char file2[1024];
+	char fileSrc[1024];
+	char fileDst[1024];
 	char sep[256];
 
-	if(sscanf(line, "%[^ \n\r\t]%[ \t]%[^ \n\r\t]", file1, sep, file2) != 3)
+	if(sscanf(line, "%[^ \n\r\t]%[ \t]%[^ \n\r\t]", fileSrc, sep, fileDst) != 3)
 	{
-		if(sscanf(line, "%s", file1) != 1)
+		if(sscanf(line, "%s", fileSrc) != 1)
 		{
 			char msg[1024];
 			sprintf(msg, "Invalid line in file list: %s\n", line);
@@ -1214,20 +1214,20 @@ bool SpeechRec::ProcessFileListLine(data_format inpf, data_format outpf, char *l
 			return false;
 		}
 		// compose target file name
-		strcpy(file2, file1);
+		strcpy(fileDst, fileSrc);
 		switch(outpf)
 		{
 			case dfParams:
-				ChangeFileSuffix(file2, C.GetString("params", "suffix"));
+				ChangeFileSuffix(fileDst, C.GetString("params", "suffix"));
 				break;
 			case dfPosteriors:
-				ChangeFileSuffix(file2, C.GetString("traps", "suffix"));
+				ChangeFileSuffix(fileDst, C.GetString("traps", "suffix"));
 				break;
 			case dfStrings:
 				if(fp_mlf)
-					CreateLabelFileNameForMLF(file1, file2);
+					CreateLabelFileNameForMLF(fileSrc, fileDst);
 				else
-					ChangeFileSuffix(file2, C.GetString("labels", "suffix"));
+					ChangeFileSuffix(fileDst, C.GetString("labels", "suffix"));
 				break;
 			case dfWaveform:
 				break;
@@ -1237,7 +1237,7 @@ bool SpeechRec::ProcessFileListLine(data_format inpf, data_format outpf, char *l
 	}
 
 	// process one file
-	if(!ProcessFile(inpf, outpf, file1, file2, fp_mlf))
+	if(!ProcessFile(inpf, outpf, fileSrc, fileDst, fp_mlf))
 		return false;
 
 	return true;
