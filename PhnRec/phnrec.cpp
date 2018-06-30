@@ -14,14 +14,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <assert.h>
 #include <string>
-//#include <getopt.h>
-#include <map> 
 
 #include "config.h"
 #include "srec.h"
 #include "getopt.h"
+
+// For -l, if each line of the file-list is a single audio input filename foo/bar.something,
+// then the corresponding output file will be foo/bar.rec.
+// Or, each line may be an input filename, tab, output filename.
+// See srec.cpp's SpeechRec::ProcessFileListLine()
 
 void help()
 {
@@ -153,7 +155,7 @@ int main(int argc, char *argv[])
 				input_file = optarg;
 				break;
 			case 'o':
-				output_file = optarg;
+				output_file = optarg; // requires -i
 				break;
 			case 'm':
 				output_mlf = optarg;
@@ -186,7 +188,7 @@ int main(int argc, char *argv[])
 				verbose = true;
 				break;
                         case '?':
-                                fprintf(stderr, "ERROR: Error during command line parsing\n");
+                                fprintf(stderr, "ERROR: unrecognized command line argument\n");
                                 exit(1);
 		}
 	}
@@ -198,7 +200,7 @@ int main(int argc, char *argv[])
 	// construct speech recognizer
 	if(!config_dir)
 	{
-		fprintf(stderr, "ERROR: Configuration directory is not set (-c)\n");
+		fprintf(stderr, "ERROR: Missing configuration directory (-c)\n");
 		exit(1);
 	}
 	char config_file[1024];
@@ -214,7 +216,7 @@ int main(int argc, char *argv[])
 		float value;
 		if(sscanf(wpenalty, "%f", &value) != 1)
 		{
-			fprintf(stderr, "ERROR: Invalid argument for -p switch at command line: %s\n", wpenalty);
+			fprintf(stderr, "ERROR: Invalid argument for -p switch: %s\n", wpenalty);
 			exit(1);
 		}
 		SR.DE->SetWPenalty(value);
@@ -227,7 +229,7 @@ int main(int argc, char *argv[])
 	// check the input file name if an output is asked	
 	if(output_file && !input_file)
 	{
-		fprintf(stderr, "ERROR: The input file is not specified (-i)\n");
+		fprintf(stderr, "ERROR: -o output_file requires -i input_file)\n");
 		exit(1);
 	}
 
@@ -263,8 +265,8 @@ int main(int argc, char *argv[])
 	{
 		live_conf cfg;
 		cfg.fmt = format;
-		const char *mode = SR.C.GetString("decoder", "mode");
-		if(strcmp(mode, "kws") == 0)
+		cfg.kws = false;
+		if(strcmp(SR.C.GetString("decoder", "mode"), "kws") == 0)
 		{
                         #ifndef PHNREC_ONLY
                           if(strcmp(SR.C.GetString("decoder", "type"), "stkint") == 0)
@@ -278,10 +280,6 @@ int main(int argc, char *argv[])
 			cfg.dumped = false;
 			cfg.SR = &SR;
 			cfg.kws = true; 
-		}
-		else
-		{
-			cfg.kws = false;
 		}
 
 		SR.DE->SetCallbackFunc(&live_callback, (void *)&cfg);
